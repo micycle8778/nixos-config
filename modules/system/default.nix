@@ -38,7 +38,7 @@
     ./programs/mpv.nix
     ./programs/nautilus.nix
     ./programs/neovim.nix
-    ./programs/steam.nix
+    # ./programs/steam.nix
     ./programs/thunderbird.nix
     ./programs/zathura.nix
   ];

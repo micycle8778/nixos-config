@@ -8,35 +8,40 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/f1116515-e7d0-41e1-af96-e8bed3b90503";
-      fsType = "ext4";
+    { device = "/dev/disk/by-uuid/d4cda0ac-d5f4-43b3-86be-cbb26fbdab39";
+      fsType = "btrfs";
+      options = [ "subvol=@" ];
     };
 
-  boot.initrd.luks.devices."luks-3e66e646-5213-46ca-9cf9-ea61d65159a9".device = "/dev/disk/by-uuid/3e66e646-5213-46ca-9cf9-ea61d65159a9";
-  boot.initrd.luks.devices."luks-7428bc36-adad-4d69-a035-2c2d6ddbd7fc".device = "/dev/disk/by-uuid/7428bc36-adad-4d69-a035-2c2d6ddbd7fc";
+  boot.initrd.luks.devices."luks-ab9c8154-8464-443b-afaf-c999d4a05da3".device = "/dev/disk/by-uuid/ab9c8154-8464-443b-afaf-c999d4a05da3";
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/471E-9688";
+    { device = "/dev/disk/by-uuid/B8B4-21AF";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = [ "fmask=0077" "dmask=0077" ];
     };
 
   fileSystems."/mnt/Games" =
-  {
-    device = "/dev/disk/by-uuid/8774a2b7-1b02-41bf-9cc0-d2cf79dc29a3";
-    fsType = "ext4";
-    options = [ "users" "exec" "x-gvfs-show" ];
-  };
+    {
+      device = "/dev/disk/by-uuid/8774a2b7-1b02-41bf-9cc0-d2cf79dc29a3";
+      fsType = "ext4";
+      options = [ "default" "exec" "x-gvfs-show" ];
+    };
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/cffe90d9-31e4-4c75-a47e-dc509be1009c"; }
-    ];
+  fileSystems."/mnt/hdd" =
+    {
+      device = "/dev/disk/by-uuid/ee7fa23f-9120-436c-9c2c-fee976d8dfba";
+      fsType = "ext4";
+      options = [ "default" "x-gvfs-show" ];
+    };
+
+  swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
