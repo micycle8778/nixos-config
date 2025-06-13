@@ -33,12 +33,12 @@
           ./hosts/thinkpad/configuration.nix
         ];
       };
-      # desktop = nixpkgs.lib.nixosSystem {
-      #   specialArgs = { inherit inputs; };
-      #   modules = [
-      #     ./hosts/desktop/configuration.nix
-      #   ];
-      # };
+      desktop = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/desktop/configuration.nix
+        ];
+      };
     };
   };
 }
