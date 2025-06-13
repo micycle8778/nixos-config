@@ -1,0 +1,91 @@
+// -*- mode: jsonc -*-
+{
+    // "height": 48,
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": [],
+    "modules-right": [ "group/group-applets", "clock" ],
+
+    "margin-top": ".5em",
+
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+
+        "format": "{icon}",
+        "format-icons": {
+            "1": "q",
+            "2": "w",
+            "3": "e",
+            "4": "r",
+            "5": "t",
+
+            "6": "1",
+            "7": "2",
+            "8": "3",
+            "9": "4",
+            "10": "5",
+        },
+
+        "persistent-workspaces": { "*": 10 },
+    },
+
+    "bluetooth": {
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "format-on": "󰂯",
+        "format-connected": "󰂱",
+        "format-no-controller": ""
+    },
+
+    "network": {
+        "format-ethernet": "󰛳",
+        "format-wifi": "{icon}", // use the strength icons
+        "format-disconnected": "󰤮",
+        "format-disabled": "󰲜",
+        
+        "interval": 1,
+
+        "tooltip-format-wifi": "{essid} ({signalStrength}%) ({bandwidthTotalBytes})",
+        "tooltip-format-ethernet": "{ifname} ({bandwidthTotalBytes})",
+        "tooltip-format-disconnected": "Disconnected",
+        "tooltip-format-disabled": "Disabled",
+
+        "format-icons": [ "󰤯", "󰤟", "󰤢", "󰤥", "󰤨" ],
+    },
+
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-muted": "󰖁",
+
+        "format-icons": {
+            "default": [ "󰕿", "󰖀", "󰕾" ],
+            "headphones": "󰋋"
+        },
+
+        "on-click": "pavucontrol",
+        "scroll-step": 0, // eww no scrolling to change volume
+    },
+
+    "custom/battery": {
+        // "exec-if": "upower -e | sed '/hid/d' | grep battery",
+        // "exec": "python /home/micycle/battery.py",
+        // "exec": "upower --monitor | while read line; do date; done",
+        "exec": "~/waybar-multi-battery",
+        "return-type": "json",
+        "format": "<span>{}</span>",
+    },
+
+    "group/group-applets": {
+        "orientation": "inherit",
+        "modules": [
+            "bluetooth",
+            "network",
+            "pulseaudio",
+            "custom/battery",
+        ]
+    },
+
+    "clock": {
+        "interval": 1,
+        "format": "{:%H:%M:%S}",
+    },
+}

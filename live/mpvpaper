@@ -1,0 +1,1 @@
+mpvpaper -o "no-audio --speed=5 --loop-file=inf --video-zoom=-2" '*' ~/wallpapers/blahaj-go-spinny-blahaj.mp4

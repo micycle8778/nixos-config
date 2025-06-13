@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Script to use unity with neovim
+# point unity to this script labeled "code" and it'll think this is vs code and
+# call us like we are vs code
+
+SERVER="/tmp/nvimgodot"
+
+SERVER_RUNNING=false
+if nvim --server $SERVER --remote-send ''; then
+    SERVER_RUNNING=true
+else
+    SERVER_RUNNING=false
+fi
+
+if [[ $# == "1" ]]; then
+    if $SERVER_RUNNING; then
+        nvim --server $SERVER --remote-send ":cd $1<CR>:e $1<CR>"
+    else
+        kitty nvim --listen $SERVER "$1"
+    fi
+else
+    dir="$1"
+    file="$(echo "$3" | awk --field-separator ':' '{print $1}')"
+    lineno="$(echo "$3" | awk --field-separator ':' '{print $2}')"
+    if $SERVER_RUNNING; then
+        nvim --server $SERVER --remote-send ":cd $dir<CR>:e $file<CR>:$lineno<CR>"
+    else
+        kitty nvim --listen $SERVER "+cd $dir" +"$lineno" "$file"
+    fi
+
+fi

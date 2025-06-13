@@ -1,0 +1,53 @@
+configuration {
+    display-drun: ""; 
+}
+
+* {
+    font: "Ubuntu 18";
+    background-color: transparent;
+    text-color: inherit;
+}
+
+window {
+    background-color: #1d2021cc;
+    text-color: #ebdbb2;
+    transparency: "real";
+
+    padding: 0.75em;
+    border-color: #ebdbb2;
+    border: 0.25em;
+}
+
+inputbar {
+    padding: 0.5em;
+    margin: 0 0 0.5em 0;
+    border: 5px;
+
+    border-color: #ebdbb2;
+    border-radius: 20px;
+}
+
+entry {
+    placeholder: "";
+}
+
+listview {
+    lines: 10;
+    fixed-height: false;
+    dynamic: true;
+}
+
+element {
+    border-radius: 10px;
+    padding: 5px;
+}
+
+element.selected {
+    text-color: #1d2021;
+    background-color: #ebdbb2;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+}

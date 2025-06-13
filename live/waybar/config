@@ -1,0 +1,136 @@
+[
+  {
+    "bluetooth": {
+      "format-connected": "󰂱",
+      "format-disabled": "󰂲",
+      "format-no-controller": "",
+      "format-off": "󰂲",
+      "format-on": "󰂯",
+      "on-click": "blueberry"
+    },
+    "clock": {
+      "calendar": {
+        "format": {
+          "months": "",
+          "today": "<b>{}</b>"
+        },
+        "mode": "month"
+      },
+      "format": "{:%H:%M:%S}",
+      "interval": 1,
+      "tooltip-format": "{:%A, %b %d, %Y}\n<span font='monospace'>{calendar}</span>"
+    },
+    "custom/battery": {
+      "exec": "/nix/store/a6s8rx63yba20bp9iz68bhl2ibhg2bx2-waybar-multi-battery-0.2.2/bin/waybar-multi-battery",
+      "format": "<span>{}</span>",
+      "return-type": "json"
+    },
+    "group/group-applets": {
+      "modules": [
+        "bluetooth",
+        "network",
+        "pulseaudio",
+        "custom/battery",
+        "idle_inhibitor",
+        "tray"
+      ],
+      "orientation": "inherit"
+    },
+    "hyprland/workspaces": {
+      "all-outputs": false,
+      "disable-scroll": true,
+      "format": "{icon}",
+      "format-icons": {
+        "1": "q",
+        "10": "5",
+        "2": "w",
+        "3": "e",
+        "4": "r",
+        "5": "t",
+        "6": "1",
+        "7": "2",
+        "8": "3",
+        "9": "4"
+      },
+      "persistent-workspaces": {
+        "*": 10,
+        "DP-1": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "DP-2": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "DP-3": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "HDMI-A-1": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    "idle_inhibitor": {
+      "format": "{icon}",
+      "format-icons": {
+        "activated": "",
+        "deactivated": "󰒲"
+      },
+      "tooltip": false
+    },
+    "modules-center": [],
+    "modules-left": [
+      "hyprland/workspaces"
+    ],
+    "modules-right": [
+      "group/group-applets",
+      "clock"
+    ],
+    "network": {
+      "format-disabled": "󰲜",
+      "format-disconnected": "󰤮",
+      "format-ethernet": "󰛳",
+      "format-icons": [
+        "󰤯",
+        "󰤟",
+        "󰤢",
+        "󰤥",
+        "󰤨"
+      ],
+      "format-wifi": "{icon}",
+      "interval": 1,
+      "tooltip-format-disabled": "Disabled",
+      "tooltip-format-disconnected": "Disconnected",
+      "tooltip-format-ethernet": "{ifname} ({bandwidthTotalBytes})",
+      "tooltip-format-wifi": "{essid} ({signalStrength}%) ({bandwidthTotalBytes})"
+    },
+    "pulseaudio": {
+      "format": "{icon}",
+      "format-icons": {
+        "default": [
+          "󰕿",
+          "󰖀",
+          "󰕾"
+        ],
+        "headphones": "󰋋"
+      },
+      "format-muted": "󰖁",
+      "on-click": "pavucontrol",
+      "scroll-step": 0
+    }
+  }
+]

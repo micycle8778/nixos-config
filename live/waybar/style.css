@@ -1,0 +1,134 @@
+* {
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: Ubuntu, FontAwesome;
+    font-size: 20px;
+}
+
+window#waybar {
+    background-color: transparent;
+    color: #ebdbb2;
+}
+
+#workspaces {
+    margin-left: .5em;
+}
+
+#clock {
+    margin-left: .5em;
+}
+
+.modules-left, .modules-right {
+    margin-top: .5em;
+}
+
+#workspaces button, #clock, #group-applets {
+    margin: 0 .25em;
+
+    font-weight: 400;
+
+    border: none;
+    border-radius: .85em;
+
+    padding: 0.35em .5em;
+
+    background-color: rgba(29, 32, 33, 0.8);
+    color: #ebdbb2;
+
+    transition-property: background-color, padding, opacity;
+
+    transition-duration: .2s;
+    transition-timing-function: ease-out;
+}
+
+#clock {
+    padding: .35em .75em;
+}
+
+#workspaces button:hover {
+    /* remove the annoying GTK defaults */
+    box-shadow: none;
+    text-shadow: none;
+    background: none;
+    transition: none;
+    border: none;
+
+    background-color: #ebdbb2;
+    color: #1d2021;
+    opacity: 1;
+
+    transition-property: background-color, padding, opacity;
+
+    transition-duration: .2s;
+    transition-timing-function: ease-out;
+}
+
+#workspaces button.visible {
+    background-color: #ebdbb2;
+    color: #1d2021;
+    opacity: 1;
+}
+
+#workspaces button.empty:not(.visible) {
+    color: #3c3836;
+    opacity: 0;
+}
+
+#workspaces button.active {
+    opacity: 1;
+    background-color: #ebdbb2;
+    color: #1d2021;
+    padding: 0.25em 1em;
+    /* box-shadow: inset 0 -3px #ffffff; */
+}
+
+#custom-battery {
+    border-radius: 5px;
+}
+
+#custom-battery.low {
+    color: #cc241d;
+}
+
+@keyframes battery-flash {
+    from { 
+        color: #cc241d; 
+        background: inherit;
+    }
+
+    to { 
+        color: rgba(29, 32, 33, 0.8);
+        background: #cc241d; 
+    }
+}
+
+#custom-battery.critical {
+    color: #cc241d;
+
+    animation-name: battery-flash;
+    animation-duration: .5s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+#idle_inhibitor.activated {
+    color: #cc241d;
+}
+
+#group-applets * {
+    margin: 0 .25em;
+    padding: 0 .25em;
+}
+
+#group-applets #idle_inhibitor {
+    margin-left: 0;
+}
+
+#group-applets #bluetooth {
+    margin: 0;
+    margin-right: .10em;
+}
+
+#group-applets #network {
+    margin-left: 0;
+}

@@ -1,0 +1,200 @@
+#
+# ~/.bashrc
+#
+
+source /etc/profile
+PS1="\[\033[01;36m\]\u\[\033[00m\] \[\033[01;34m\]\W\[\033[00m\] \[\033[01;37m\]\$\[\033[00m\] "
+## Aliases ##
+alias ls='ls --color=auto'
+alias mv='mv -iv'
+alias cp='cp -iv'
+alias rm='rm -Iv'
+alias vim='nvim'
+alias vi='nvim'
+alias mkdir='mkdir -pv'
+alias less='bat'
+alias ssh='TERM=xterm-256color ssh'
+alias cat='bat'
+alias dd='dd status=progress'
+alias df='df -h'
+
+## Alias Commands ##
+alias gd='git difftool --no-symlinks --dir-diff --cached'
+alias gl='git log --oneline -n5'
+alias sps='ps -A | grep -i'
+alias gc='git commit -aS -m'
+alias ll='ls -lh'
+alias lm='ll -t'
+alias ud='du -hd 1'
+alias uda='ud -a'
+alias rmcd='rm -r "$PWD" && cd ..'
+alias search='find 2> /dev/null | grep -i'
+alias heart='playlist-append Favorites'
+alias web-mirror='wget --mirror --page-requisites --adjust-extension --convert-links --no-parent'
+alias current-genre="mpc current -f '%genre%'"
+
+# tail here to prevent the annoying empty line at the top
+alias meow='fortune fortunes | kittysay | tail -n +2 | dotacat'
+
+## youtube-dl ##
+alias yt='yt-dlp --add-metadata -i'
+alias yta='yt-dlp --add-metadata -i -x'
+alias ytp="yt -o '%(playlist)s/%(playlist_index)s - %(title)s-%(id)s.%(ext)s'"
+alias ytap="yta -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s'"
+alias yts="yt -o '~/Videos/Youtube Videos/Channels/%(channel)s/%(title)s-%(id)s.%(ext)s'"
+alias ytas="yta -o '~/Music/%(ext)s/%(creator)s/%(title)s.%(ext)s'"
+alias ytsp="yt -o '~/Videos/Youtube Videos/Channels/%(channel)s/%(playlist)s/%(playlist_index)s - %(title)s-%(id)s.%(ext)s'"
+
+## Functions ##
+extract () 
+{ # Extract an archive. Barely works.
+    if [ -f "$1" ] ; then
+        case "$1" in
+                      *.tar.xz)         tar xJf "$1"        ;;
+            *.tar.bz2)        tar xjf "$1"        ;;
+            *.tar.gz)         tar xzf "$1"        ;;
+            *.bz2)            bunzip2 "$1"        ;;
+            *.rar)            unrar x "$1"        ;;
+            *.gz)             gunzip "$1"         ;;
+            *.tar)            tar xf "$1"         ;;
+            *.tbz2)           tar xjf "$1"        ;;
+            *.tgz)            tar xzf "$1"        ;;
+            *.zip)            unzip "$1"          ;;
+            *.Z)              uncompress "$1"     ;;
+            *.7z)             7z e "$1"          ;;
+            *)                echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+mkcd() 
+{ # Create a directory and move into it
+    mkdir "$1" && cd "$1"
+}
+
+video-convert()
+{ # Use ffmpeg to convert file from format A to format B. convert <FILE(S)> <FORMAT>
+    if [ $# -lt 2 ]; then
+        echo 'Usage: video-convert <FILE(S)> <FORMAT>'
+        return 1
+    fi
+
+    format="${@: -1}" # Bash only: get the last argument
+    for file in "${@:1:$#-1}"; do
+        ffmpeg -i "$file" "${file%.*}"."$format"
+    done
+}
+
+template()
+{ # Copy a file from the template directory with an arbitary filename
+    [[ -z "$TEMPLATE_DIR" ]] && TEMPLATE_DIR="$HOME/Templates"
+
+    if [ -z "$1" ]; then
+        echo "Usage: template <FILE>"
+        return 1
+    fi
+    
+    filename=$(basename -- "$1")
+    extension="${filename##*.}"
+    
+    if ls -1 "$TEMPLATE_DIR/$extension" &>/dev/null; then
+        cp "$TEMPLATE_DIR/$extension" "$1" > /dev/null # if you have verbose on
+    else
+        echo "Template $extension not found!"
+        return 2
+    fi
+}
+
+songsearch() {
+    if [ -z "$1" ]; then
+        echo "Usage: songsearch <FILE>"
+        return 1
+    fi
+
+    RESULTS="$(mpc --format '%title%' playlist | grep -in "$1")"
+    
+    if [ -z "$RESULTS" ]; then
+        echo "No song found."
+        return 2
+    fi
+
+    RESULTS_COUNT=$(echo "$RESULTS" | wc -l)
+    if [[ "$RESULTS_COUNT" -eq "1" ]]; then
+        mpc --quiet play $(echo $RESULTS | awk --field-separator ':' '{ print $1 }')
+        mpc shuffle
+    else
+        echo -e "More than one song found\n"
+        echo "$RESULTS"
+    fi
+}
+
+PLAYLIST_DIR="$HOME/Sync/playlists/"
+playlist-append() {
+    if [ -z $1 ]; then
+        echo "Usage: playlist-append <PLAYLIST>"
+        return 1
+    fi
+
+    if [ -z "$PLAYLIST_DIR" ]; then
+        PLAYLIST_DIR="$HOME/.mpd/playlists"
+    fi
+
+    if [ -z "$(ls -lHd "$PLAYLIST_DIR" 2>/dev/null | grep '^d')" ]; then
+        echo "$PLAYLIST_DIR is not a folder!"
+        return 2
+    fi
+
+    PLAYLIST="$PLAYLIST_DIR/$1.m3u"
+    FILE="$(mpc -f '%file%' current)"
+
+    ls "$PLAYLIST" &>/dev/null || touch "$PLAYLIST"
+    if [ -z "$(grep "$FILE" "$PLAYLIST")" ]; then
+        echo $FILE >> "$PLAYLIST"
+    fi
+}
+
+
+## Command disowning ##
+zathura()
+{
+    env zathura "$@" & disown
+}
+
+qutebrowser()
+{
+    env qutebrowser "$@" &>/dev/null & disown
+}
+
+print-file()
+{
+    cat $1 | lp
+}
+
+compile-doc()
+{
+    filename="$(basename $1)"
+    filename="${filename%.*}"
+    pandoc "$1" -o "$filename".pdf
+}
+
+## Path Exports ##
+export PATH=~/.nimble/bin:$PATH
+export PATH=$PATH:~/.local/bin
+export PATH=~/go/bin:$PATH
+export PATH=~/Android/Sdk/platform-tools:$PATH
+export PATH=/opt/rocm/bin:$PATH
+export PATH=/opt/cuda/bin:$PATH
+
+## .NET ##
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+export MENU='rofi -dmenu'
+
+export EDITOR=nvim
+
+. "$HOME/.cargo/env" > /dev/null
+
+export CHROME_EXECUTABLE=chromium
+meow

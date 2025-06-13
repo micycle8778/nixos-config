@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+run () {
+    echo "$*"
+    [ -z "$DRYRUN" ] && eval "$*"
+}
+
+flatpak () {
+    env flatpak --noninteractive "$@"
+}
+
+flatpakbuild () {
+    flatpaks="$(flatpak list)"
+
+    cat "$SCRIPT_DIR"/flatpaks.config | while read line; do
+        # ignore comments
+        line="$(echo "$line" | sed 's/#.*//')"
+        
+        # ignore empty lines (and comment lines)
+        if [[ $line == "" ]]; then
+            continue
+        fi
+
+        # check if flatpak is installed
+        if echo "$flatpaks" | grep "$line" &> /dev/null; then
+            run flatpak update -y "$line"
+        else
+            run flatpak install -y "$line"
+        fi
+    done
+}
+
+# usage: nixbuild <profile> 
+# nixbuild thinkpad == sudo nixos-rebuild switch --flake ./.#thinkpad 
+nixbuild () {
+    run git add -A
+    run sudo nixos-rebuild switch --flake "$SCRIPT_DIR#$1"
+}
+
+symcommit () {
+    if [ -z "$DRYRUN" ]; then mkdir -p "$(dirname "$2")"; fi
+    run ln -sfn "$1" "$2"
+}
+
+# usage: symlinkbuild [home]
+symlinkbuild () {
+    base=$1
+    if [ -z "$1" ]; then
+        base=$HOME
+    fi
+
+    cat "$SCRIPT_DIR"/live.config | while read line; do
+        # ignore comments
+        line="$(echo "$line" | sed 's/#.*//')"
+        
+        # ignore empty lines (and comment lines)
+        if [[ $line == "" ]]; then
+            continue
+        fi
+
+        src="$SCRIPT_DIR"/live/$(echo $line | awk '{print $1}')
+        dest="$base"/$(echo $line | awk '{print $2}')
+
+        # if the file exists
+        if ls -ld "$dest" &> /dev/null; then
+            # check that the file is a symlink
+            if ls -ld "$dest" | grep ^l &> /dev/null; then
+                # then its probably safe to kill the symlink
+                symcommit "$src" "$dest"
+            else
+                # otherwise play it safe
+                echo "ERROR: \"$dest\" exists and is not a symlink! Skipping." 1>&2
+            fi
+        else
+            symcommit "$src" "$dest"
+        fi
+
+    done
+}
+
+printhelp() {
+    echo "USAGE: $0 <command>"
+    echo 
+    echo "COMMANDS:"
+    echo "	--help			prints out this text"
+    echo "	link [home]		creates symlinks according to $SCRIPT_DIR/live.config"
+    echo "				relative to the home directory specified or \$HOME"
+    echo "	nixos <profile>		calls nixos rebuild with the flake output specified by profile"
+    echo "	flatpak			updates and installs flatpaks accordings to $SCRIPT_DIR/flatpaks.config"
+    echo "	all <profile> [home]	performs the link, flatpak, and nixos command in that order"
+    echo
+    echo "This program always prints out commands it executes before executing them."
+    echo "If the DRYRUN environment variable is set, then the program will not execute any"
+    echo "commands and will only print them."
+
+}
+
+if [[ $# == 0 ]]; then
+    printhelp
+    exit
+fi
+
+case $1 in
+    "--help" | "help")
+        printhelp
+        ;;
+
+    "link")
+        symlinkbuild "$2"
+        ;;
+
+    "flatpak")
+        flatpakbuild
+        ;;
+
+    "nixos")
+        if [[ $# == 1 ]]; then
+            echo "FATAL: Missing profile argument!"
+            printhelp 1>&2
+            exit 1
+        fi
+
+        nixbuild $2
+        ;;
+    
+    "all")
+        if [[ $# == 1 ]]; then
+            echo "FATAL: Missing profile argument!"
+            printhelp 1>&2
+            exit 1
+        fi
+
+        symlinkbuild $3
+        flatpakbuild
+        nixbuild $2
+        ;;
+
+    *)
+        echo "FATAL: Unknown command \"$1\"" 1>&2
+        printhelp 1>&2
+        exit 1
+        ;;
+esac

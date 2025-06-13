@@ -1,0 +1,30 @@
+width=400
+height=200
+
+default-timeout=0
+ignore-timeout=1
+icons=0
+
+layer=overlay
+
+background-color=#282828cc
+text-color=#ebdbb2
+
+border-color=#ebdbb2
+border-size=3
+border-radius=10
+
+progress-color=over #3c3836cc
+
+font=Roboto 14
+
+on-button-left=none
+on-button-middle=none
+on-button-right=none
+on-touch=none
+on-notify=none
+
+[urgency=high]
+border-color=#cc241d
+text-color=#cc241d
+default-timeout=0
