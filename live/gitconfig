@@ -1,0 +1,13 @@
+[diff]
+    tool = kitty
+    guitool = gitty.gui
+[difftool]
+    prompt = false
+    trustExitCode = true
+[difftool "kitty"]
+    cmd = kitten diff $LOCAL $REMOTE
+[difftool "kitty.gui"]
+    cmd = kitten diff $LOCAL $REMOTE
+[user]
+	email = me@micycle.dev
+	name = Michael Campbell
