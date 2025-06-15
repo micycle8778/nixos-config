@@ -86,9 +86,11 @@ printhelp() {
     echo "	--help			prints out this text"
     echo "	link [home]		creates symlinks according to $SCRIPT_DIR/live.config"
     echo "				relative to the home directory specified or \$HOME"
-    echo "	nixos <profile>		calls nixos rebuild with the flake output specified by profile"
+    echo "	nixos [profile]		calls nixos rebuild with the flake output specified by profile"
+    echo "				if no profile is specified, it will use the default option"
+	echo "				(typically 'default' or the current profile)"
     echo "	flatpak			updates and installs flatpaks accordings to $SCRIPT_DIR/flatpaks.config"
-    echo "	all <profile> [home]	performs the link, flatpak, and nixos command in that order"
+    echo "	all [profile] [home]	performs the link, flatpak, and nixos commands in that order"
     echo
     echo "This program always prints out commands it executes before executing them."
     echo "If the DRYRUN environment variable is set, then the program will not execute any"
@@ -115,25 +117,13 @@ case $1 in
         ;;
 
     "nixos")
-        if [[ $# == 1 ]]; then
-            echo "FATAL: Missing profile argument!"
-            printhelp 1>&2
-            exit 1
-        fi
-
-        nixbuild $2
+        nixbuild "$2"
         ;;
     
     "all")
-        if [[ $# == 1 ]]; then
-            echo "FATAL: Missing profile argument!"
-            printhelp 1>&2
-            exit 1
-        fi
-
-        symlinkbuild $3
+        symlinkbuild "$3"
         flatpakbuild
-        nixbuild $2
+        nixbuild "$2"
         ;;
 
     *)

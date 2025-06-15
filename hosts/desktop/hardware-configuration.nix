@@ -31,14 +31,14 @@
     {
       device = "/dev/disk/by-uuid/8774a2b7-1b02-41bf-9cc0-d2cf79dc29a3";
       fsType = "ext4";
-      options = [ "default" "exec" "x-gvfs-show" ];
+      options = [ "exec" "x-gvfs-show" ];
     };
 
   fileSystems."/mnt/hdd" =
     {
       device = "/dev/disk/by-uuid/ee7fa23f-9120-436c-9c2c-fee976d8dfba";
       fsType = "ext4";
-      options = [ "default" "x-gvfs-show" ];
+      options = [ "x-gvfs-show" ];
     };
 
   swapDevices = [ ];

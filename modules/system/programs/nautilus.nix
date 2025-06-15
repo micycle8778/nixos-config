@@ -37,9 +37,13 @@
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
+  programs.nautilus-open-any-terminal = {
+    enable = true;
+    terminal = "kitty";
+  };
+
   environment.systemPackages = with pkgs; [
     nautilus
-    # nautilus-open-any-terminal
     gvfs
   ];
 }

@@ -130,7 +130,7 @@ songsearch() {
     fi
 }
 
-PLAYLIST_DIR="$HOME/Sync/playlists/"
+PLAYLIST_DIR="$HOME/Music/playlists/"
 playlist-append() {
     if [ -z $1 ]; then
         echo "Usage: playlist-append <PLAYLIST>"

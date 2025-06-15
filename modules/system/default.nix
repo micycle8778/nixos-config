@@ -15,6 +15,7 @@
     ./docker.nix
     ./locale.nix
     ./micycle.nix
+    ./mpd.nix
     ./nix-ld.nix
     ./nix.nix
     ./networkmanager.nix

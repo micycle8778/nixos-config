@@ -17,7 +17,7 @@
     users.users.micycle = {
       isNormalUser = true;
       description = "Michael Campbell";
-      extraGroups = [ "networkmanager" "wheel" "docker" "storage" "dialout" ];
+      extraGroups = [ "networkmanager" "wheel" "docker" "storage" "dialout" "gamemode" ];
     };
 
     # Enable automatic login for the user.
