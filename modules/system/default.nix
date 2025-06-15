@@ -30,6 +30,7 @@
     ./programs/aseprite.nix
     ./programs/bat.nix
     ./programs/browser.nix
+    ./programs/ffmpeg.nix
     ./programs/fortune.nix
     # ./programs/gnupg.nix
     ./programs/godot.nix
